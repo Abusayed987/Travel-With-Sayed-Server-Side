@@ -21,20 +21,21 @@ async function run() {
         const serviceCollection = client.db('travelWithSayed').collection('services')
         const reviewCollection = client.db('travelWithSayed').collection('review')
 
-        // Services Api 
-        app.get('/services', async (req, res) => {
-            const query = {}
-            const cursor = serviceCollection.find(query);
-            const services = await cursor.toArray();;
-            // const services = await cursor.limit(3).toArray();
-            res.send(services)
-        });
-
+        // servicesForHome Api
         app.get('/servicesForHome', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
             // const services = await cursor.toArray();;
             const services = await cursor.limit(3).toArray();
+            res.send(services)
+        });
+
+
+        // Services Api 
+        app.get('/services', async (req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query);
+            const services = await cursor.toArray();;
             res.send(services)
         });
 
@@ -45,26 +46,18 @@ async function run() {
             res.send(service)
         })
 
+        app.post('/services', async (req, res) => {
+            const service = req.body;
+            const result = await serviceCollection.insertOne(service)
+            res.send(result);
+        })
+
+
         //Review Api
         app.post('/reviews', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review)
             res.send(result);
-        })
-
-
-        // all reviews dekhanor jonno serviceId diye query korte hobe.
-        app.get('/allReviews', async (req, res) => {
-
-            let query = {}
-            if (req.query.service) {
-                query = {
-                    service: req.query.service
-                }
-            }
-            const cursor = reviewCollection.find(query);
-            const review = await cursor.toArray();
-            res.send(review)
         })
 
         // particular review
@@ -78,8 +71,23 @@ async function run() {
             }
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
+            const count = await reviewCollection.estimatedDocumentCount()
+            res.send({ count, review })
+        })
+
+        app.get('/allReviews', async (req, res) => {
+
+            let query = {}
+            if (req.query.service) {
+                query = {
+                    service: req.query.service
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
             res.send(review)
         })
+
 
     }
     finally {
