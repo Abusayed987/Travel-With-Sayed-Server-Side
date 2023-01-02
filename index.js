@@ -19,12 +19,22 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const serviceCollection = client.db('travelWithSayed').collection('services')
+        const reviewCollection = client.db('travelWithSayed').collection('review')
 
+        // Services Api 
         app.get('/services', async (req, res) => {
             const query = {}
             const cursor = serviceCollection.find(query);
-            const services = await cursor.toArray();
+            const services = await cursor.toArray();;
             // const services = await cursor.limit(3).toArray();
+            res.send(services)
+        });
+
+        app.get('/servicesForHome', async (req, res) => {
+            const query = {}
+            const cursor = serviceCollection.find(query);
+            // const services = await cursor.toArray();;
+            const services = await cursor.limit(3).toArray();
             res.send(services)
         });
 
@@ -33,6 +43,42 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const service = await serviceCollection.findOne(query)
             res.send(service)
+        })
+
+        //Review Api
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review)
+            res.send(result);
+        })
+
+
+        // all reviews dekhanor jonno serviceId diye query korte hobe.
+        app.get('/reviews', async (req, res) => {
+            console.log(req.query.service);
+            let query = {}
+            if (req.query.service) {
+                query = {
+                    service: req.query.service
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review)
+        })
+
+        // particular review
+        app.get('/reviews', async (req, res) => {
+            // console.log(req.query.email);
+            let query = {}
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review)
         })
 
     }
