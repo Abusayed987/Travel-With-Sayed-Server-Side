@@ -54,8 +54,8 @@ async function run() {
 
 
         // all reviews dekhanor jonno serviceId diye query korte hobe.
-        app.get('/reviews', async (req, res) => {
-            console.log(req.query.service);
+        app.get('/allReviews', async (req, res) => {
+
             let query = {}
             if (req.query.service) {
                 query = {
@@ -69,7 +69,7 @@ async function run() {
 
         // particular review
         app.get('/reviews', async (req, res) => {
-            // console.log(req.query.email);
+
             let query = {}
             if (req.query.email) {
                 query = {
