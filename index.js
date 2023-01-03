@@ -82,6 +82,28 @@ async function run() {
             res.send(review)
         })
 
+        // update Review 
+
+        app.put('reviews/:id', async (req, res) => {
+            // const id = req.params.id
+            // const query = { _id: ObjectId(id) }
+            // const updateReview = req.body
+            // console.log(updateReview);
+            // const review = req.body
+            // const option = { upsert: true }
+            // const updateDoc = {
+            //     $set: {
+            //         review
+
+            //         // reviewerName: review.review,
+            //         // reviewerPhoto: review.reviewerPhoto,
+            //         // reviewerText: review.reviewerText
+            //     }
+            // }
+            // const result = await reviewCollection.updateOne(query, updateDoc)
+            // res.sendDate(result)
+        })
+
 
         app.delete('/reviews/:id', async (req, res) => {
             const id = req.params.id;
@@ -90,15 +112,8 @@ async function run() {
             const result = await reviewCollection.deleteOne(query)
             res.send(result)
         })
-        // app.patch('/reviews/:id', async (req, res) => {
-        //     const id = req.params.id
-        //     console.log(id);
-        //     const query = { _id: ObjectId(id) } 
-        //     const updateDoc = {
-        //         $set: req.body
-        //     }
 
-        // })
+
 
 
 
