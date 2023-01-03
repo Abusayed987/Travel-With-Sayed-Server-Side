@@ -62,7 +62,6 @@ async function run() {
 
         // particular review
         app.get('/reviews', async (req, res) => {
-
             let query = {}
             if (req.query.email) {
                 query = {
@@ -71,9 +70,43 @@ async function run() {
             }
             const cursor = reviewCollection.find(query);
             const review = await cursor.toArray();
-            const count = await reviewCollection.estimatedDocumentCount()
-            res.send({ count, review })
+            res.send(review)
         })
+
+        // particular review by id
+
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const review = await reviewCollection.findOne(query)
+            res.send(review)
+        })
+
+
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+
+            const query = { _id: ObjectId(id) }
+            const result = await reviewCollection.deleteOne(query)
+            res.send(result)
+        })
+        // app.patch('/reviews/:id', async (req, res) => {
+        //     const id = req.params.id
+        //     console.log(id);
+        //     const query = { _id: ObjectId(id) } 
+        //     const updateDoc = {
+        //         $set: req.body
+        //     }
+
+        // })
+
+
+
+
+
+
+
+
 
         app.get('/allReviews', async (req, res) => {
 
